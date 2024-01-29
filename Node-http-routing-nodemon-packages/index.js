@@ -17,6 +17,7 @@ const fs = require('fs');
 
 const httpServer = http.createServer((req, res) => {
   const handleReadFile = (fileLocation, statusCode) => {
+    fs.readFile(fileLocation, 'utf-8' ,(err, data) => {
     fs.readFile(fileLocation, (err, data) => {
       res.writeHead(statusCode, { 'Content-Type': 'text/html' });
       // res.write('<h1>Node Server Has Been Running Successfully!</h1>');
