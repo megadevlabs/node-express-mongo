@@ -1,0 +1,20 @@
+{
+  "name": "external-modules-packagejson",
+  "version": "1.0.0",
+  "description": "external modules package JSON",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "npm",
+    "node.js",
+    "nodemon"
+  ],
+  "author": "Md Salahuddin Khan",
+  "license": "ISC",
+  "dependencies": {
+    "movies-names": "^1.1.1",
+    "random-fruits-name": "^1.10.0"
+  }
+}
