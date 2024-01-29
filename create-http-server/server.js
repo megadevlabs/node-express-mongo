@@ -17,7 +17,7 @@ const myServer = http.createServer((req, res) => {
   res.end("<h1>Hello I'm your first node server</h1>");
 });
 
-myServer.listen(port, hostname, () => {
+myServer.listen(port, hostname, (req, res) => {
   // console.log('Server is running successfully at localhost:3030');
   console.log(`Server is running successfully at http://${hostname}:${port}`);
 });
