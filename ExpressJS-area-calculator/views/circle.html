@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Circle Calculator</title>
+    <style>
+      nav > ul {
+        list-style: none;
+      }
+      nav > ul > li {
+        display: inline-block;
+        border: 1px solid;
+        margin: 5px;
+        padding: 5px 10px;
+      }
+      nav > ul > li a {
+        text-decoration: none;
+      }
+
+      .formControl {
+        margin: 5px;
+      }
+      .formControl label {
+        display: flex;
+        width: 100px;
+      }
+      button {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/circle">Circle Calculator</a></li>
+        <li><a href="/triangle">Triangle Calculator</a></li>
+      </ul>
+    </nav>
+
+    <h1>Circle Calculator</h1>
+    <div id="circleCalculator">
+      <form action="/circle" method="post">
+        <div class="formControl">
+          <label for="radius">Radius:</label>
+          <input type="text" id="radius" name="radius" placeholder="Radius?" />
+        </div>
+        <button type="submit">Calculate</button>
+      </form>
+    </div>
+  </body>
+</html>
