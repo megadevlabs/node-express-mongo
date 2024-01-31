@@ -1,5 +1,5 @@
 {
-  "name": "expressjs-make-post-request-with-json-or-form-data",
+  "name": "expressjs-http-request-with-query-parameter",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",

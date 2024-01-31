@@ -8,11 +8,21 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 
-// Make Request with JSON
-app.post('/user', (req, res) => {
-  const name = req.body.name;
+app.get('/register', (req, res) => {
+  res.sendFile(__dirname + '/views/register.html');
+});
+
+// Make POST Request with JSON
+// app.post('/register', (req, res) => {
+//   const name = req.body.name;
+//   const age = req.body.age;
+//   res.send(`Welcome ${name}. You are ${age}`);
+// });
+
+app.post('/register', (req, res) => {
+  const fullName = req.body.fullName;
   const age = req.body.age;
-  res.send(`Welcome ${name}. You are ${age}`);
+  res.send(`<h2>Hello, ${fullName}. Your Age is ${age}</h2>`);
 });
 
 app.listen(PORT, () => {
