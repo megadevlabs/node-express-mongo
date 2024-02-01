@@ -5,6 +5,13 @@ const getUsers = (req, res) => {
   res.sendFile(path.join(__dirname + '/../views/users/index.html'));
 };
 
+// API Response Data
+const showUsers = (req, res) => {
+  res.status(200).json({
+    users,
+  });
+};
+
 const saveUser = (req, res) => {
   const name = req.body.name;
   const country = req.body.country;
@@ -17,4 +24,4 @@ const saveUser = (req, res) => {
   });
 };
 
-module.exports = { getUsers, saveUser };
+module.exports = { getUsers, showUsers, saveUser };
