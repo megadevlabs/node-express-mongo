@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload System</title>
+  </head>
+  <body>
+    <h1>File, Image and Video Upload To Database</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+      <div>
+        <input
+          type="text"
+          name="name"
+          id="name"
+          placeholder="Enter Your Name?"
+        />
+      </div>
+      <br />
+      <div>
+        <input type="file" name="image" id="image" />
+      </div>
+      <hr />
+      <button type="submit">Upload</button>
+    </form>
+  </body>
+</html>
