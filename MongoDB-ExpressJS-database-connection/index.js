@@ -62,8 +62,18 @@ app.get('/', (req, res) => {
 // Read Data -> GET All of the Products
 app.get('/products', async (req, res) => {
   try {
+    const price = req.query.price; // Get User Request Data
+    let products;
+
     // const getProducts = await Product.find().limit(2);
-    const getProducts = await Product.find();
+    // const getProducts = await Product.find({ price: { $in: [1050, 1650] } });
+    // const getProducts = await Product.find({ price: { $nin: [1050, 1650] } });
+    if (price) {
+      getProducts = await Product.find({ price: { $gt: price } });
+    } else {
+      getProducts = await Product.find();
+    }
+
     if (getProducts) {
       res.status(200).send({
         success: true,
