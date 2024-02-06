@@ -16,10 +16,6 @@ const productsSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  rating: {
-    type: Number,
-    required: true,
-  },
   description: {
     type: String,
     required: true,
@@ -63,20 +59,17 @@ app.get('/', (req, res) => {
 // PUT: /products/:id -> Update a product based on id
 // DELETE: /products/:id -> Delete a product based on id
 
-/* find data using logical operator */
-// {$and: [{price: {$gt: price}}, {rating: {$gt: 4}}]}
-// {$or: [{ price: { $gt: price } }, { rating: { $gt: 4 } }]}
-// {$nor: [{ price: { $gt: price } }, { rating: { $gt: 4 } }]}
-
 // Read Data -> GET All of the Products
 app.get('/products', async (req, res) => {
   try {
     const price = req.query.price; // Get User Request Data
     let products;
+
+    // const getProducts = await Product.find().limit(2);
+    // const getProducts = await Product.find({ price: { $in: [1050, 1650] } });
+    // const getProducts = await Product.find({ price: { $nin: [1050, 1650] } });
     if (price) {
-      getProducts = await Product.find({
-        $and: [{ price: { $gt: price } }, { rating: { $gt: 4 } }],
-      });
+      getProducts = await Product.find({ price: { $gt: price } });
     } else {
       getProducts = await Product.find();
     }
@@ -136,13 +129,12 @@ app.get('/products/:id', async (req, res) => {
 app.post('/products', async (req, res) => {
   try {
     // GetData From Request Body Or Form
-    const { title, price, rating, description } = req.body;
+    const { title, price, description } = req.body;
 
     // Store Data into Model
     const newProduct = new Product({
       title: title,
       price: price,
-      rating: rating,
       description: description,
     });
 
