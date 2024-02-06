@@ -75,15 +75,15 @@ app.get('/products', async (req, res) => {
     let products;
     if (price) {
       getProducts = await Product.find({
-        $and: [{ price: { $gt: price } }, { rating: { $gt: 4 } }],
+        $or: [{ price: { $gt: price } }, { rating: { $gt: 3 } }],
       })
         .sort({ price: -1 })
-        .select({ title: 1, _id: 0 });
+        .select({ title: 1, price: 1, _id: 1 });
     } else {
       // getProducts = await Product.find().countDocuments();// Counting
       getProducts = await Product.find()
         .sort({ price: -1 })
-        .select({ title: 1, _id: 0 }); // Sorting, 1 = Ascending, -1 = Descending
+        .select({ title: 1, price: 1, _id: 1 }); // Sorting, 1 = Ascending, -1 = Descending
     }
 
     if (getProducts) {
@@ -129,7 +129,7 @@ app.get('/products/:id', async (req, res) => {
     } else {
       res.status(404).send({
         success: false,
-        message: 'Product not found!',
+        message: 'Product not found with this id!',
       });
     }
   } catch (error) {
@@ -155,6 +155,29 @@ app.post('/products', async (req, res) => {
     const productData = await newProduct.save();
 
     res.status(201).send(productData);
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+});
+
+// Delete Products
+app.delete('/products/:id', async (req, res) => {
+  try {
+    const getId = req.params.id;
+    // const productDeleteStatus = await Product.deleteOne({ _id: getId });// Only for Delete
+    const productDeleteStatus = await Product.findByIdAndDelete({ _id: getId }); // Find and Delete Both
+    if (productDeleteStatus) {
+      res.status(200).send({
+        success: true,
+        message: 'Deleted Single Product',
+        data: productDeleteStatus,
+      });
+    } else {
+      res.status(404).send({
+        success: false,
+        message: 'Product was not deleted with this id!',
+      });
+    }
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
