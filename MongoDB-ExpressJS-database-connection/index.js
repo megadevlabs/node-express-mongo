@@ -15,9 +15,16 @@ const productsSchema = new mongoose.Schema({
     maxlength: [100, 'maximum length of the product title should be 100'],
     // uppercase: true,
     trim: true,
-    enum: {
-      values: ['iphone 18', 'samsung'],
-      message: '{VALUE} is not supported',
+    // enum: {
+    //   values: ['iphone 18', 'samsung'],
+    //   message: '{VALUE} is not supported',
+    // },
+    // Custom Validator
+    validate: {
+      validator: function (v) {
+        return v.length === 10;
+      },
+      message: props => `${props.value} is not a valid`,
     },
   },
   price: {
@@ -29,6 +36,17 @@ const productsSchema = new mongoose.Schema({
   rating: {
     type: Number,
     required: true,
+  },
+  phone: {
+    type: String,
+    required: [true, 'Phone number is required'],
+    validate: {
+      validator: function (v) {
+        const phoneRegex = /\d{4}-\d{3}-\d{4}/;
+        return phoneRegex.test(v);
+      },
+      message: props => `${props.value} is not a valid phone number`,
+    },
   },
   // email: {
   //   type: String,
@@ -93,12 +111,12 @@ app.get('/products', async (req, res) => {
         $or: [{ price: { $gt: price } }, { rating: { $gt: 3 } }],
       })
         .sort({ price: -1 })
-        .select({ title: 1, price: 1, _id: 1 });
+        .select({ title: 1, price: 1, rating: 1, phone: 1, _id: 1 });
     } else {
       // getProducts = await Product.find().countDocuments();// Counting
       getProducts = await Product.find()
         .sort({ price: -1 })
-        .select({ title: 1, price: 1, rating: 1, _id: 1 }); // Sorting, 1 = Ascending, -1 = Descending
+        .select({ title: 1, price: 1, rating: 1, phone: 1, _id: 1 }); // Sorting, 1 = Ascending, -1 = Descending
     }
 
     if (getProducts) {
@@ -156,13 +174,14 @@ app.get('/products/:id', async (req, res) => {
 app.post('/products', async (req, res) => {
   try {
     // GetData From Request Body Or Form
-    const { title, price, rating, description } = req.body;
+    const { title, price, rating, phone, description } = req.body;
 
     // Store Data into Model
     const newProduct = new Product({
       title: title,
       price: price,
       rating: rating,
+      phone: phone,
       description: description,
     });
 
@@ -194,6 +213,7 @@ app.put('/products/:id', async (req, res) => {
     const description = req.body.description;
     const price = req.body.price;
     const rating = req.body.rating;
+    const phone = req.body.phone;
 
     const updatedProduct = await Product.findByIdAndUpdate(
       { _id: id },
@@ -203,6 +223,7 @@ app.put('/products/:id', async (req, res) => {
           description: description,
           price: price,
           rating: rating,
+          phone: phone,
         },
       },
       { new: true }
