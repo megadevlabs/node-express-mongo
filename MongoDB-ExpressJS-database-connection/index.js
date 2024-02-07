@@ -10,16 +10,31 @@ app.use(express.json());
 const productsSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true,
+    required: [true, 'Title is required'],
+    minlength: [3, 'minimum length of the product title should be 3'],
+    maxlength: [100, 'maximum length of the product title should be 100'],
+    // uppercase: true,
+    trim: true,
+    enum: {
+      values: ['iphone 18', 'samsung'],
+      message: '{VALUE} is not supported',
+    },
   },
   price: {
     type: Number,
+    min: [200, 'minimum product price should be 200'],
+    max: [2000, 'maximum product price should be 2000'],
     required: true,
   },
   rating: {
     type: Number,
     required: true,
   },
+  // email: {
+  //   type: String,
+  //   required: true,
+  //   unique: true,
+  // },
   description: {
     type: String,
     required: true,
