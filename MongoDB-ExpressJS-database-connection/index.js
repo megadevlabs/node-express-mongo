@@ -83,7 +83,7 @@ app.get('/products', async (req, res) => {
       // getProducts = await Product.find().countDocuments();// Counting
       getProducts = await Product.find()
         .sort({ price: -1 })
-        .select({ title: 1, price: 1, _id: 1 }); // Sorting, 1 = Ascending, -1 = Descending
+        .select({ title: 1, price: 1, rating: 1, _id: 1 }); // Sorting, 1 = Ascending, -1 = Descending
     }
 
     if (getProducts) {
@@ -154,7 +154,56 @@ app.post('/products', async (req, res) => {
     // Save (Single/ One) Data Into Database
     const productData = await newProduct.save();
 
-    res.status(201).send(productData);
+    if (productData) {
+      res.status(201).send({
+        success: true,
+        message: 'New Product Added',
+        data: productData,
+      });
+    } else {
+      res.status(404).send({
+        success: false,
+        message: 'Product was not added!',
+      });
+    }
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+});
+
+// Update Product
+app.put('/products/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const title = req.body.title;
+    const description = req.body.description;
+    const price = req.body.price;
+    const rating = req.body.rating;
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      { _id: id },
+      {
+        $set: {
+          title: title,
+          description: description,
+          price: price,
+          rating: rating,
+        },
+      },
+      { new: true }
+    );
+    if (updatedProduct) {
+      res.status(200).send({
+        success: true,
+        message: 'Updated Product',
+        data: updatedProduct,
+      });
+    } else {
+      res.status(404).send({
+        success: false,
+        message: 'Product was not updated with this id!',
+      });
+    }
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
