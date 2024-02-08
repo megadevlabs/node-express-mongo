@@ -1,12 +1,14 @@
+// Salting and Hashing passwords
+
 // Creating Express Server
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const md5 = require('md5');
 const app = express();
 
-// console.log(md5(123456));
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 const User = require('./models/user.model');
 
@@ -38,12 +40,16 @@ app.get('/', (req, res) => {
 // Create New User
 app.post('/register', async (req, res) => {
   const email = req.body.email;
-  const password = md5(req.body.password);
+  const password = req.body.password;
   try {
     // const newUser = new User(req.body);
-    const newUser = new User({ email, password });
-    await newUser.save();
-    res.status(201).json(newUser);
+
+    bcrypt.hash(password, saltRounds, async function (err, hash) {
+      // Store hash in your password DB.
+      const newUser = new User({ email: email, password: hash });
+      await newUser.save();
+      res.status(201).json(newUser);
+    });
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
@@ -54,8 +60,13 @@ app.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email: email });
-    if (user && user.password === md5(password)) {
-      res.status(200).json({ status: 'valid user' });
+    if (user) {
+      bcrypt.compare(password, user.password, function (err, result) {
+        // result == true
+        if (result === true) {
+          res.status(200).json({ status: 'valid user' });
+        }
+      });
     } else {
       res.status(404).json({ status: 'User Not found!' });
     }
